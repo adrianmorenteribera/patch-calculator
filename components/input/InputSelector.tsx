@@ -18,6 +18,9 @@ export default function InputSelector({
   const [modalVisible, setModalVisible] = useState(false);
   const [tempSelectedValue, setTempSelectedValue] = useState(selectedValue);
 
+  // Sort the options alphabetically by their label
+  const sortedOptions = options.sort((a, b) => a.label.localeCompare(b.label));
+
   const handleSelect = () => {
     onValueChange(tempSelectedValue);
     setModalVisible(false); // Close the picker after selection
@@ -37,7 +40,10 @@ export default function InputSelector({
         onPress={() => setModalVisible(true)}
       >
         <Text style={styles.selectedText}>
-          {options.find((option) => option.value === selectedValue)?.label}
+          {
+            sortedOptions.find((option) => option.value === selectedValue)
+              ?.label
+          }
         </Text>
       </TouchableOpacity>
 
@@ -53,7 +59,7 @@ export default function InputSelector({
               selectedValue={tempSelectedValue}
               onValueChange={(itemValue) => setTempSelectedValue(itemValue)}
             >
-              {options.map((option) => (
+              {sortedOptions.map((option) => (
                 <Picker.Item
                   key={option.value}
                   label={option.label}

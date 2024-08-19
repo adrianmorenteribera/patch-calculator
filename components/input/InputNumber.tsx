@@ -9,23 +9,42 @@ import {
 
 interface InputNumberProps {
   value?: number; // Optional value prop with a default value
-  onChangeValue: (value: number) => void;
+  onChangeValue: (value: number | string) => void;
   placeholder?: string;
   label?: string;
 }
 
 export default function InputNumber({
-  value = 0, // Default value set to 0
+  value = 0,
   onChangeValue,
   placeholder,
   label,
 }: InputNumberProps) {
   const handleIncrement = () => {
-    onChangeValue(value + 1);
+    onChangeValue(Math.floor(value) + 1);
   };
 
   const handleDecrement = () => {
-    onChangeValue(value > 0 ? value - 1 : 0); // Ensure the value doesn't go below 0
+    onChangeValue(Math.floor(value) > 0 ? Math.floor(value) - 1 : 0);
+  };
+
+  const handleChangeText = (text: string) => {
+    const regex = /^\d*\.?\d*$/;
+
+    // Check if the text matches the regex pattern
+    if (regex.test(text)) {
+      // Handle the case where the input is just a dot or a valid number with a trailing dot
+      if (text === "." || text.endsWith(".")) {
+        onChangeValue(text); // Temporarily store the string
+      } else {
+        const floatValue = parseFloat(text);
+
+        // Update the value if it's a valid number
+        if (!isNaN(floatValue)) {
+          onChangeValue(floatValue);
+        }
+      }
+    }
   };
 
   return (
@@ -38,9 +57,11 @@ export default function InputNumber({
         <TextInput
           style={styles.input}
           value={value.toString()}
-          onChangeText={(text) => onChangeValue(parseFloat(text) || 0)} // Ensure fallback to 0 on invalid input
+          onChangeText={handleChangeText}
+          inputMode={"decimal"}
           placeholder={placeholder}
-          keyboardType="numeric"
+          keyboardType="decimal-pad"
+          clearTextOnFocus={true}
         />
         <TouchableOpacity onPress={handleIncrement} style={styles.buttonRight}>
           <Text style={styles.buttonText}>+</Text>

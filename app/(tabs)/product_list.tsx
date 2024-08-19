@@ -20,7 +20,6 @@ export default function ProductList() {
 
   const isFocused = useIsFocused();
 
-  // Load products from AsyncStorage
   const loadProducts = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem("@products");
@@ -32,14 +31,12 @@ export default function ProductList() {
     }
   };
 
-  // Refresh the products list whenever the tab becomes focused
   useEffect(() => {
     if (isFocused) {
       loadProducts();
     }
   }, [isFocused]);
 
-  // Save products to AsyncStorage
   const saveProducts = async (updatedProducts: { [key: string]: any }) => {
     try {
       const jsonValue = JSON.stringify(updatedProducts);
@@ -49,10 +46,8 @@ export default function ProductList() {
     }
   };
 
-  // Toggle edit mode
   const handleEditToggle = (key: string) => {
     if (editableProduct === key) {
-      // Validation for "Cantidad" and "Agua"
       if (
         products[key].quantity_to_add <= 0 ||
         products[key].reference_water <= 0
@@ -63,14 +58,13 @@ export default function ProductList() {
         );
         return;
       }
-      saveProducts(products); // Save changes when exiting edit mode
-      setEditableProduct(null); // Exit edit mode
+      saveProducts(products);
+      setEditableProduct(null);
     } else {
-      setEditableProduct(key); // Enter edit mode
+      setEditableProduct(key);
     }
   };
 
-  // Handle input change for an existing product
   const handleInputChange = (key: string, field: string, value: string) => {
     setProducts((prevProducts) => ({
       ...prevProducts,
@@ -81,7 +75,6 @@ export default function ProductList() {
     }));
   };
 
-  // Delete a product
   const deleteProduct = (key: string) => {
     Alert.alert(
       "Confirmar eliminación",
@@ -251,10 +244,10 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: "#CCCCCC",
-    paddingHorizontal: 4, // Reduced padding
-    paddingVertical: 2, // Adjusted padding to reduce size
+    paddingHorizontal: 4,
+    paddingVertical: 2,
     borderRadius: 4,
-    maxWidth: 48, // Adjusted width to reduce size
+    maxWidth: 48,
     textAlign: "center",
   },
   inputWithUnit: {
@@ -274,6 +267,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 4,
     textAlignVertical: "top",
-    height: 80, // Adjust the height as needed for the notes section
+    height: 80,
   },
 });

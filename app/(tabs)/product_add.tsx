@@ -92,13 +92,13 @@ export default function AddProductScreen() {
       />
 
       <InputNumber
-        label="Cantidad"
+        label="Cantidad de producto necesaria para la mezcla"
         value={quantity}
         onChangeValue={setQuantity}
       />
 
       <InputSelector
-        label="Unidad de Cantidad"
+        label="Unidad de Cantidad del producto"
         selectedValue={quantityUnit}
         onValueChange={(value) =>
           setQuantityUnit(value as Product["quantity_to_add_unit"])
@@ -107,7 +107,7 @@ export default function AddProductScreen() {
       />
 
       <InputNumber
-        label="Referencia de Agua"
+        label="Cantidad de agua para la mezcla"
         value={referenceWater}
         onChangeValue={setReferenceWater}
       />

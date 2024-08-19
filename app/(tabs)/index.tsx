@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -16,19 +17,22 @@ export default function HomeScreen() {
   const [resultQuantity, setResultQuantity] = useState<string>("");
   const [productNotes, setProductNotes] = useState<string>("");
 
-  useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        const jsonValue = await AsyncStorage.getItem("@products");
-        if (jsonValue != null) {
-          setProducts(JSON.parse(jsonValue));
-        }
-      } catch (e) {
-        console.error("Failed to load products", e);
+  const loadProducts = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("@products");
+      if (jsonValue != null) {
+        setProducts(JSON.parse(jsonValue));
       }
-    };
-    loadProducts();
-  }, []);
+    } catch (e) {
+      console.error("Failed to load products", e);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      loadProducts();
+    }, []),
+  );
 
   const handleProductSelect = (productKey: string) => {
     setSelectedProduct(productKey);
@@ -58,9 +62,7 @@ export default function HomeScreen() {
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-      headerImage={
-        <Image source={require("@/assets/images/partial-react-logo.png")} />
-      }
+      headerImage={<Image source={require("@/assets/images/lia.png")} />}
     >
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Calcular Proporciones</ThemedText>
